@@ -62,9 +62,14 @@ module.exports = function(app) {
             var container = angular.element('<li></li>');
             if (item.subsections.length>0)
               container.addClass('subelements');
+            var itemAction = item.action();
+            var meta = item.additionalData();
+            if (meta && meta.isGroup) {
+              itemAction = '{0} (&times; {1})'.format(itemAction, meta.count);
+            }
             var action = angular.element(
               '<div class="action" ng-click="onClick({0})">{1}</div>'
-              .format(item.id(), item.action()));
+              .format(item.id(), itemAction));
             if (item.isOther)
               action.addClass('other');
             var info = angular.element('<div class="info"></div>');
