@@ -28,10 +28,12 @@ function stats(tree, callback) {
       tree.duration(tree.duration() + node.duration());
       var rootMesh = tree.network();
       var nodeMesh = node.network();
-      for (var i=0; i<rootMesh.length; i++) {
-        for (var j=0; j<rootMesh[i].remote.length; j++) {
-          rootMesh[i].remote[j].in += nodeMesh[i].remote[j].in;
-          rootMesh[i].remote[j].out += nodeMesh[i].remote[j].out;
+      if (rootMesh && nodeMesh) {
+        for (var i=0; i<rootMesh.length; i++) {
+          for (var j=0; j<rootMesh[i].remote.length; j++) {
+            rootMesh[i].remote[j].in += nodeMesh[i].remote[j].in;
+            rootMesh[i].remote[j].out += nodeMesh[i].remote[j].out;
+          }
         }
       }
       next();
@@ -53,6 +55,7 @@ function aggregate(tree, numMiners, callback) {
       if (item.subsections.length == 0)
         return next();
 
+      var hasNetwork = !!item.network();
       var sumDuration = 0;
       async.eachSeries(item.subsections, function(subnode, nextNode) {
         sumDuration += subnode.duration();
@@ -70,7 +73,8 @@ function aggregate(tree, numMiners, callback) {
             null
           ]);
           other.isOther = true;
-          other.createEmptyNetworkMesh();
+          if (hasNetwork)
+            other.createEmptyNetworkMesh();
           item.subsections.unshift(other);
         }
 
@@ -82,20 +86,22 @@ function aggregate(tree, numMiners, callback) {
           transfer: []
         };
 
-        for (var i=0; i<numMiners; i++) {
-          // [in, out]
-          item.graphData.transfer.push([
-            {
-              values: [],
-              key: 'In',
-              color: '#ff0e56'
-            },
-            {
-              values: [],
-              key: 'Out',
-              color: '#2ca02c'
-            }
-          ]);
+        if (hasNetwork) {
+          for (var i=0; i<numMiners; i++) {
+            // [in, out]
+            item.graphData.transfer.push([
+              {
+                values: [],
+                key: 'In',
+                color: '#ff0e56'
+              },
+              {
+                values: [],
+                key: 'Out',
+                color: '#2ca02c'
+              }
+            ]);
+          }
         }
 
         var actionMap = {};
@@ -124,7 +130,7 @@ function aggregate(tree, numMiners, callback) {
               transfer[1].values.push({ x: durationAccum, y: sumOut * 1000 * 1000 / node.duration() });
             }
           }
-          else {
+          else if (hasNetwork) {
             for (var i=0; i<numMiners; i++) {
               var x = durationAccum;
               var transfer = item.graphData.transfer[i];
@@ -144,11 +150,13 @@ function aggregate(tree, numMiners, callback) {
         },
         function() {
           // Add "end" samples for network graphs
-          for (var i=0; i<numMiners; i++) {
-            var x = durationAccum;
-            var transfer = item.graphData.transfer[i];
-            transfer[0].values.push({ x: durationAccum, y: 0 });
-            transfer[1].values.push({ x: durationAccum, y: 0 });
+          if (hasNetwork) {
+            for (var i=0; i<numMiners; i++) {
+              var x = durationAccum;
+              var transfer = item.graphData.transfer[i];
+              transfer[0].values.push({ x: durationAccum, y: 0 });
+              transfer[1].values.push({ x: durationAccum, y: 0 });
+            }
           }
 
           // Populate grouped by action graphs data
