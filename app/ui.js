@@ -9,6 +9,7 @@ var humanize = require('./humanize');
 var tooltips = require('./tooltips');
 var unflatten = require('./unflatten');
 var stats = require('./stats');
+var aggregate = require('./aggregate');
 
 function loadingMessage(msg, $scope) {
   console.log(msg);
@@ -236,22 +237,24 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
   };
 
   $scope.loadCSV = function(files) {
-    // TODO: refactor to use aggregate module
-    // $scope.loading = true;
-    // parser.loadTables(files, function(err, tables) {
-    //   if (err)
-    //     return console.log('Error: ', err); // TODO: proper error displaying
-    //
-    //   unflatten(tables, function(err, data) {
-    //     if (err)
-    //       return console.error('Error: ', err); // TODO: proper error displaying
-    //
-    //     console.log('loaded: ', data);
-    //     $scope.data = data;
-    //     $scope.treeElement = angular.element('<tree></tree>');
-    //     angular.element(document.body).append($scope.treeElement);
-    //     $compile($scope.treeElement)($scope);
-    //   });
-    // });
+    $scope.loading = true;
+    loadingMessage('Loading CSV data: ', $scope);
+    for (var i=0; i<files.length; i++)
+      loadingMessage('... ' + path.basename(files[i]), $scope);
+    loadingMessage('... This may be a bit of a wait', $scope);
+
+    console.time('csv');
+    var obj = [];
+    var stream = aggregate(files);
+    stream.on('data', function(data) {
+      obj.push(data);
+    });
+    stream.on('end', function() {
+      console.timeEnd('csv');
+      $scope.load(obj);
+    });
+    stream.on('error', function(err) {
+      console.log(err);
+    });
   };
 }]);
