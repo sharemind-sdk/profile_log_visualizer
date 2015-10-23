@@ -1,1 +1,2 @@
-# profile_log_visualizer
+# Sharemind profile log visualizer
+
