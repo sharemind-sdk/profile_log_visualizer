@@ -74,10 +74,10 @@ module.exports = function(app) {
               action.addClass('other');
             var info = angular.element('<div class="info"></div>');
             var duration = angular.element(
-              '<span style="background: -webkit-linear-gradient(left, rgba(255, 0, 0, 0.0) , rgba(255, 0, 0, {0}));">Duration: {1} &micro;s ({2})</span>'
+              '<span style="background: -webkit-linear-gradient(left, rgba(255, 0, 0, 0.0) , rgba(255, 0, 0, {0}));">{1} ({2}%)</span>'
               .format(durationCost,
-                item.duration(),
-                humanize.microseconds(item.duration()))
+                humanize.microseconds(item.duration()),
+                durationCost * 100)
             );
             info.append(duration);
             action.append(info);

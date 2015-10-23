@@ -47,6 +47,10 @@ function stats(tree, callback) {
 
 // Aggregates data for charts
 function aggregate(tree, numMiners, callback) {
+  tree.relativeCost = {
+    duration: 1.0
+  };
+
   traversal.breadth(tree, {
     subnodesAccessor: function(node) {
       return node.subsections;
