@@ -206,7 +206,6 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
       console.timeEnd('reconstruct');
       if (err)
         return console.error(err);
-      console.log('reconstruct', tree);
 
       loadingMessage('Aggregating chart data...', $scope);
       console.time('stats');
@@ -214,7 +213,6 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
         console.timeEnd('stats');
         if (err)
           return console.error(err);
-        console.log('stats', tree);
 
         $scope.data = tree;
         $scope.treeElement = angular.element('<tree></tree>');
