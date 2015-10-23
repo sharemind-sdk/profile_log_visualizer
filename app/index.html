@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="Analyser">
+  <head>
+    <title>Profile log analyser</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="components/nvd3/build/nv.d3.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body ng-controller="Main">
+    <div id="loading" collapse="loaded">
+      <a href="#" ng-click="open()" ng-if="!loading">Select log files</a>
+      <a ng-if="loading">Loading...</a>
+      <ul class="messages" collapse="!loading">
+        <li ng-repeat="msg in loadingMessages">{{ msg }}</li>
+      </ul>
+    </div>
+    <div id="side-pane">
+      <div collapse="!selected">
+        <div id="controls">
+          <a href="#" ng-click="close()" class="pull-right">Close</a>
+        </div>
+        <div class="graphs" ng-if="graphData">
+          <div class="block">
+            <div class="pie-block">
+              <span>Duration</span>
+              <nvd3 options="pieChartOptions" data="graphData.duration" class="with-3d-shadow with-transitions"></nvd3>
+            </div>
+            <div class="pie-block">
+              <span>Duration grouped by action</span>
+              <nvd3 options="pieChartOptions" data="graphData.durationGrouped" class="with-3d-shadow with-transitions"></nvd3>
+            </div>
+          </div>
+          <div ng-repeat="graph in graphData.transfer" class="line-block">
+            <span>Network utilisation for server #{{ $index + 1 }}</span>
+            <nvd3 options="lineChartOptions" data="graph" class="with-3d-shadow with-transitions"></nvd3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="components/angular/angular.js"></script>
+    <script src="components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="components/moment/min/moment.min.js"></script>
+
+    <script src="components/d3/d3.js"></script>
+    <script src="components/nvd3/build/nv.d3.js"></script>
+    <script src="components/angular-nvd3/dist/angular-nvd3.js"></script>
+
+    <script src="polyfills.js"></script>
+    <script src="ui.js"></script>
+  </body>
+</html>
