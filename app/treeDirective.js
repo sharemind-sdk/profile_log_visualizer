@@ -77,7 +77,7 @@ module.exports = function(app) {
               '<span style="background: -webkit-linear-gradient(left, rgba(255, 0, 0, 0.0) , rgba(255, 0, 0, {0}));">{1} ({2}%)</span>'
               .format(durationCost,
                 humanize.microseconds(item.duration()),
-                durationCost * 100)
+                Math.round(durationCost * 1000)/10)
             );
             info.append(duration);
             action.append(info);
