@@ -1,6 +1,6 @@
 {
   "name": "profile-log-visualizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sharemind profile log visualizer",
   "main": "app/analyser.js",
   "author": "n0n",
