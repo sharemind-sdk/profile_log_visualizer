@@ -12,6 +12,7 @@
     "byline-interleave": "^1.1.2",
     "electron-prebuilt": "^0.33.3",
     "line-by-line": "^0.1.4",
+    "minimist": "^1.2.0",
     "tree-traversal": "^1.0.0"
   }
 }

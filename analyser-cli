@@ -5,6 +5,6 @@ die () {
 	exit 1
 }
 
-[ "$#" -gt 0 ] || die "Usage: ${0} <node0-profile.csv> [node1-profile.csv] [node2-profile.csv] ..."
+[ "$#" -gt 0 ] || die "Usage: ${0} [options] <node0-profile.csv> [node1-profile.csv] [node2-profile.csv] ..."
 
 node --max-old-space-size=4096 app/cli.js $@

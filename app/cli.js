@@ -1,17 +1,3 @@
-var files = [
-  'data/t1.csv',
-  'data/t2.csv',
-  'data/t3.csv'
-
-  // 'data/m1.csv',
-  // 'data/m2.csv',
-  // 'data/m3.csv'
-
-  // '/home/user/projects/cluster/logs/01/2015-10-14-11-12-10-AppServ1-timings.csv',
-  // '/home/user/projects/cluster/logs/01/2015-10-14-11-12-20-AppServ2-timings.csv',
-  // '/home/user/projects/cluster/logs/01/2015-10-14-11-12-27-AppServ3-timings.csv'
-];
-
 var fs = require('fs');
 var JSONStream = require('JSONStream');
 var aggregate = require('./aggregate');
@@ -19,17 +5,37 @@ var aggregate = require('./aggregate');
 var OUTPUT = 'out.json';
 
 (function() {
-  var argv = process.argv.slice(2);
-  if (argv.length == 0) {
+  var argv = require('minimist')(process.argv.slice(2));
+
+  if (argv.help || argv.h) {
+    console.log("Usage: analyser-cli [options] <node0-profile.csv> [node1-profile.csv] [node2-profile.csv] ...\n");
+    console.log("\t-h  --help    This help");
+    console.log("\t-o <file>     Output to the given file instead of out.json");
+    return 1;
+  }
+
+  if (argv.o) {
+    try {
+      var stat = fs.statSync(argv.o);
+      console.log("Error: Output file already exists: %s", argv.o);
+      return 1;
+    } catch(e) {
+      /* File does not exist, good. */
+    }
+    OUTPUT = argv.o;
+  }
+
+  var files = argv._;
+  if (files.length == 0) {
     console.log('No input provided, exiting.');
     return 1;
   }
 
   try {
-    for (var i=0; i<argv.length; i++) {
-      var stats = fs.statSync(argv[i]);
+    for (var i=0; i<files.length; i++) {
+      var stats = fs.statSync(files[i]);
       if (stats && !stats.isFile())
-        throw new Error("Cannot open: not a file: " + argv[i]);
+        throw new Error("Cannot open: not a file: " + files[i]);
     }
   }
   catch (e) {
@@ -37,7 +43,7 @@ var OUTPUT = 'out.json';
     return 1;
   }
 
-  console.log('Aggregating:\n\t' + argv.join(',\n\t'));
+  console.log('Aggregating:\n\t' + files.join(',\n\t'));
   console.log('Output will be written to "%s"', OUTPUT);
 
   var output = JSONStream.stringify();
@@ -45,7 +51,7 @@ var OUTPUT = 'out.json';
 
   console.time('Time');
   var count = 0;
-  var stream = aggregate(argv);
+  var stream = aggregate(files);
   stream.on('data', function(data) {
     output.write(data);
     count++;
