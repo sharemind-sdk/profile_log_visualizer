@@ -157,28 +157,32 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
       ],
       properties: ['openFile', 'multiSelections']
     }, function(files) {
-      if (!files || files.length<1)
-        return;
-
-      var jsonFile = null;
-      for (var i=0; i<files.length; i++) {
-        var file = files[0];
-        var stat = fs.statSync(file);
-        if (!stat.isFile()) // Can happen even if only files are allowed
-          return console.error('Cannot open: not a file:', file);
-        var ext = path.extname(file);
-        if (ext == '.json') {
-          jsonFile = file;
-          if (files.length>1)
-            return console.error('Error: you can only load one JSON file');
-        }
-      }
-
-      if (jsonFile)
-        $scope.loadJSON(jsonFile);
-      else
-        $scope.loadCSV(files);
+      $scope.openFiles(files);
     });
+  };
+
+  $scope.openFiles = function(files) {
+    if (!files || files.length<1)
+      return;
+
+    var jsonFile = null;
+    for (var i=0; i<files.length; i++) {
+      var file = files[0];
+      var stat = fs.statSync(file);
+      if (!stat.isFile())
+        return console.error('Cannot open: not a file:', file);
+      var ext = path.extname(file);
+      if (ext == '.json') {
+        jsonFile = file;
+        if (files.length>1)
+          return console.error('Error: you can only load one JSON file');
+      }
+    }
+
+    if (jsonFile)
+      $scope.loadJSON(jsonFile);
+    else
+      $scope.loadCSV(files);
   };
 
   $scope.close = function() {
@@ -255,4 +259,12 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
       console.log(err);
     });
   };
+
+  // Handle command line arguments
+  var argv = remote.require('minimist')(remote.process.argv.slice(2));
+  if (argv._.length > 0) {
+    async.setImmediate(function() {
+      $scope.openFiles(argv._);
+    });
+  }
 }]);
