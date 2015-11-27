@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body ng-controller="Main">
+    <div id="splash"></div>
+    <div id="errors">
+      <div class="error" ng-repeat="err in errorMessages">{{ err }}</div>
+    </div>
     <div id="loading" collapse="loaded">
       <a href="#" ng-click="open()" ng-if="!loading">Select log files</a>
       <a ng-if="loading">Loading...</a>

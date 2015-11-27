@@ -9,7 +9,7 @@ function nextOtherID() {
 
 function stats(tree, callback) {
   if (tree.subsections.length == 0) {
-    return callback("Tree contains only root node.", null);
+    return callback("Section hierarchy does not contain any sections.", null);
   }
 
   // Detect number of miners in this profile

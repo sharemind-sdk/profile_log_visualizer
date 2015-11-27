@@ -45,6 +45,7 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
   $scope.loading = false;
   $scope.loaded = false;
   $scope.loadingMessages = [];
+  $scope.errorMessages = [];
 
   $scope.data = null;
   $scope.treeElement = null;
@@ -83,8 +84,6 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
               return;
             $scope.onChartClick(d.index);
           }
-          // elementMouseout: function(d) {},
-          // elementMouseover: function(d) {}
         }
       }
     }
@@ -130,6 +129,15 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
     }
   };
 
+  $scope.showError = function() {
+    var msg = Array.prototype.slice.call(arguments).join(' ');
+    $scope.errorMessages.push(msg);
+    setTimeout(function() {
+      $scope.errorMessages.shift();
+      $scope.$digest();
+    }, 5000);
+    console.warn('Error:', msg);
+  };
 
   $scope.onChartClick = function(index) {
     if (!$scope.selected)
@@ -149,6 +157,8 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
   };
 
   $scope.open = function() {
+    $scope.errorMessages.length = 0;
+
     dialog.showOpenDialog({
       title: 'Select profiler log',
       filters: [
@@ -165,17 +175,28 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
     if (!files || files.length<1)
       return;
 
+    $scope.errorMessages.length = 0;
+
     var jsonFile = null;
     for (var i=0; i<files.length; i++) {
       var file = files[0];
-      var stat = fs.statSync(file);
-      if (!stat.isFile())
-        return console.error('Cannot open: not a file:', file);
+      try {
+        var stat = fs.statSync(file);
+      } catch(e) {
+        $scope.showError('Cannot open: no such file:', file);
+        return;
+      }
+      if (!stat.isFile()) {
+        $scope.showError('Cannot open: not a file:', file);
+        return;
+      }
       var ext = path.extname(file);
       if (ext == '.json') {
         jsonFile = file;
-        if (files.length>1)
-          return console.error('Error: you can only load one JSON file');
+        if (files.length>1) {
+          $scope.showError('You can only load one JSON file');
+          return;
+        }
       }
     }
 
@@ -186,7 +207,7 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
   };
 
   $scope.close = function() {
-    $scope.loadingMessages = [];
+    $scope.loadingMessages.length = 0;
     $scope.loading = false;
     $scope.loaded = false;
 
@@ -201,6 +222,10 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
     $scope.selected = null;
     $scope.selectedWarnings = null;
     $scope.graphData = null;
+
+    async.setImmediate(function() {
+      $scope.$digest();
+    });
   };
 
   $scope.load = function(data) {
@@ -208,15 +233,21 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
     console.time('reconstruct');
     unflatten(data, function(err, tree) {
       console.timeEnd('reconstruct');
-      if (err)
-        return console.error(err);
+      if (err) {
+        $scope.showError(err);
+        $scope.close();
+        return;
+      }
 
       loadingMessage('Aggregating chart data...', $scope);
       console.time('stats');
       stats(tree, function(err, tree) {
         console.timeEnd('stats');
-        if (err)
-          return console.error(err);
+        if (err) {
+          $scope.showError(err);
+          $scope.close();
+          return;
+        }
 
         $scope.data = tree;
         $scope.treeElement = angular.element('<tree></tree>');
@@ -231,7 +262,9 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
     loadingMessage('Loading JSON data from: ' + path.basename(file), $scope);
     fs.readFile(file, 'utf8', function(err, data) {
       if (err) {
-        return console.error(err);
+        $scope.showError(err);
+        $scope.close();
+        return;
       }
       var obj = JSON.parse(data);
       $scope.load(obj);
@@ -256,7 +289,9 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
       $scope.load(obj);
     });
     stream.on('error', function(err) {
-      console.log(err);
+      console.timeEnd('csv');
+      $scope.showError(err);
+      $scope.close();
     });
   };
 
@@ -267,4 +302,10 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
       $scope.openFiles(argv._);
     });
   }
+
+  // Remove splash
+  angular.element(document).ready(function () {
+    var splash = document.getElementById('splash');
+    splash.parentNode.removeChild(splash);
+  });
 }]);
