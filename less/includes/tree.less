@@ -1,0 +1,69 @@
+/** Tree widget styles */
+
+tree {
+  display: block;
+  float: left;
+  width: 50%;
+
+  ul {
+    list-style-type: none;
+  }
+
+  li {
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    &.highlight {
+      border: 1px solid @tree-highlight-color !important;
+    }
+
+    &.subelements {
+      list-style-type: square;
+    }
+
+    .action {
+      display: inline-block;
+      cursor: pointer;
+      width: 100%;
+      padding-left: 10px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      background-color: @tree-item-color;
+      border: 1px solid @border-color;
+
+      &:hover {
+        background-color: @border-color;
+      }
+    }
+
+
+    .other {
+      background-color: @tree-other-color !important;
+      border: 1px solid @tree-other-border-color !important;
+
+      &:hover {
+        background-color: @tree-other-border-color !important;
+      }
+    }
+
+
+
+    .selected {
+      background-color: @tree-selected-color;
+
+      &:hover {
+        background-color: lighten(@tree-selected-color, 10%) !important;
+      }
+    }
+
+    .info {
+      display: inline-block;
+      float: right;
+    }
+
+    span {
+      display: block;
+      text-align: right;
+    }
+  }
+}
