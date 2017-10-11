@@ -162,8 +162,7 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
     dialog.showOpenDialog({
       title: 'Select profiler log',
       filters: [
-        { name: 'JSON Files', extensions: ['json'] },
-        { name: 'CSV files', extensions: ['csv'] }
+        { name: 'JSON / CSV files', extensions: ['json', 'csv'] },
       ],
       properties: ['openFile', 'multiSelections']
     }, function(files) {
