@@ -56,8 +56,22 @@ function aggregate(tree, numMiners, callback) {
       return node.subsections;
     },
     onNode: function(item, next) {
-      if (item.subsections.length == 0)
+      if (item.subsections.length == 0) {
+          // leaf node still shows graphs
+          item.graphData = {
+              groupLabels: [],
+              duration: [],
+              durationGrouped: [],
+              transfer: []
+          };
+          item.graphData.duration.push({ action: item.action(), value: 1.0 });
+          item.graphData.durationGrouped.push({ action: item.action(), value: 1.0, isGroup: true });
+
+          // TODO: add some data to the transfer graph
+
         return next();
+      }
+
 
       var hasNetwork = !!item.network();
       var sumDuration = 0;
