@@ -26,6 +26,8 @@ app.on('ready', function() {
     }
   });
 
+  mainWindow.setMenuBarVisibility(false);
+
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // mainWindow.webContents.openDevTools();

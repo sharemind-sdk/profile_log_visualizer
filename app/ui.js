@@ -2,8 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var async = require('async');
 var traversal = require('tree-traversal');
-var remote = require('remote');
-var dialog = remote.require('dialog');
+var remote = require('electron').remote;
 
 var humanize = require('./humanize');
 var tooltips = require('./tooltips');
@@ -159,7 +158,7 @@ app.controller('Main', ['$scope', '$compile', function($scope, $compile) {
   $scope.open = function() {
     $scope.errorMessages.length = 0;
 
-    dialog.showOpenDialog({
+    remote.dialog.showOpenDialog({
       title: 'Select profiler log',
       filters: [
         { name: 'JSON / CSV files', extensions: ['json', 'csv'] },
