@@ -1,6 +1,9 @@
 # Profile log visualizer
 
-## Install
+This repository is set up to be built via the build-sdk repository using CMake,
+but it can also be built independently by following the guidelines below.
+
+## Building without CMake
 
 Installing from source:
 
@@ -9,6 +12,10 @@ Installing from source:
 
 git clone https://github.com/sharemind-sdk/profile_log_visualizer.git
 cd profile_log_visualizer
+# The version number is kept in CMakeLists file, but npm requires it in package.json
+# Edit package.json and set the version number
+nano package.json
+# Install dependencies
 npm install
 ```
 
