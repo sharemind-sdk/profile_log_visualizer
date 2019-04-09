@@ -18,11 +18,11 @@
   "devDependencies": {
     "gulp": "^4.0.0",
     "gulp-less": "^4.0.1",
-    "electron-packager": "^13.1.1",
-    "pkg": "^4.3.7"
+    "electron-packager": "^12.2.0",
+    "pkg": "^3.0.6"
   },
   "scripts": {
     "package-gui": "electron-packager . @PROJECT_GUI_BIN@ --platform=@PROJECT_PLATFORM@ --arch=@PROJECT_ARCH@ --asar",
-    "package-cli": "pkg app/cli.js --max-old-space-size=4096 --targets=node@PROJECT_NODEJS_VERSION@-@PROJECT_PLATFORM@-@PROJECT_ARCH@ --output=@PROJECT_CLI_BIN@"
+    "package-cli": "pkg app/cli.js --max-old-space-size=4096 --targets=host --output=@PROJECT_CLI_BIN@"
   }
 }
