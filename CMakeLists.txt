@@ -98,8 +98,14 @@ INSTALL(
 # Packaging:
 SharemindSetupPackaging()
 SharemindAddComponentPackage(bin
-    NAME "profile-log-visualizer"
-    DESCRIPTION "Sharemind profile log visualizer"
+    NAME "sharemind-profile-log-visualizer"
+    DESCRIPTION "Sharemind profile log visualizer GUI application"
     DEB_SECTION "devel"
+    DEB_DEPENDS
+        "libasound2 (>= 1.1.0)"
+        "libgtk-3-0 (>= 3.22.0)"
+        "libnss3 (>= 3.26.0)"
+        "libx11-xcb1 (>= 1.6.0)"
+        "libxss1 (>= 1.2.0)"
 )
 SharemindPackagingFinalize()
