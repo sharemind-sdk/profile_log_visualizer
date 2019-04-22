@@ -23,18 +23,18 @@ npm install
 
 This repository contains two tools:
 
-* `analyser-cli` - a command line tool for processing the CSV format profiler logs
-* `analyser-gui` - a GUI tool for visualizing the result
+* `visualizer-cli` - a command line tool for processing the CSV format profiler logs
+* `visualizer-gui` - a GUI tool for visualizing the result
 
 The command line tool allows you to pre-process one or more profiler logs and
 aggregate the results into a JSON file which can be used with the GUI tool.
 
-    ./analyser-cli profile-log-0.csv profile-log-1.csv profile-log-2.csv
+    ./visualizer-cli profile-log-0.csv profile-log-1.csv profile-log-2.csv
 
-The GUI tool allows you to load either a JSON file (produced by `analyser-cli`)
+The GUI tool allows you to load either a JSON file (produced by `visualizer-cli`)
 or CSV files (the raw profiler output from the Sharemind server application).
 
-    ./analyser-gui
+    ./visualizer-gui
 
 ### Notes
 

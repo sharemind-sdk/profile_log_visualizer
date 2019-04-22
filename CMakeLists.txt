@@ -27,8 +27,8 @@ ENDIF()
 SET(NPM_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/tmp)
 
 # Names of the binaries created by pkg and electron-packager
-SET(PROJECT_GUI_BIN "analyser-gui")
-SET(PROJECT_CLI_BIN "analyser-cli")
+SET(PROJECT_GUI_BIN "sharemind-profile-visualizer-gui")
+SET(PROJECT_CLI_BIN "sharemind-profile-visualizer-cli")
 # NodeJS version packaged in the cli app binary
 SET(PROJECT_NODEJS_VERSION "6")
 SET(PROJECT_PLATFORM "linux")
