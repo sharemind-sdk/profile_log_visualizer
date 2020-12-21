@@ -7,7 +7,7 @@
 # code is subject to the appropriate license agreement.
 #
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
-PROJECT(profile-log-visualizer VERSION 1.0.2 LANGUAGES)
+PROJECT(profile-log-visualizer VERSION 1.0.3 LANGUAGES)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
