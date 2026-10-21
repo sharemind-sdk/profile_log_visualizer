@@ -7,12 +7,12 @@
 # code is subject to the appropriate license agreement.
 #
 CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
-PROJECT(profile-log-visualizer VERSION 1.0.3 LANGUAGES)
+PROJECT(profile-log-visualizer VERSION 1.0.4 LANGUAGES)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-FIND_PACKAGE(SharemindCMakeHelpers 1.3 REQUIRED)
+FIND_PACKAGE(SharemindCMakeHelpers 1.8 REQUIRED)
 
 IF(DEFINED SHAREMIND_NPM_REGISTRY)
   SET(NPM_REGISTRY "--registry" ${SHAREMIND_NPM_REGISTRY})
